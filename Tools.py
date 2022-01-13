@@ -6,7 +6,7 @@ import pyperclip
 
 def setup():
     options = webdriver.ChromeOptions()
-    driver = webdriver.Chrome(executable_path = "C:/ChromeDriver/ChromeDriver_V93/chromedriver.exe", options = options)
+    driver = webdriver.Chrome(executable_path = "C:/ChromeDriver/ChromeDriver_V97/chromedriver.exe", options = options)
     return driver
 
 def load(driver, url, wtime):
