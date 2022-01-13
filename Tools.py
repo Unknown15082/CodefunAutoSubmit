@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 from dotenv import load_dotenv
 import os
 import pyperclip
@@ -31,7 +32,7 @@ def login(driver):
 
     return "Success"
 
-def submit(driver, id):
+def submit(driver, id, lang):
     '''
     Currently default to C++.
     '''
@@ -41,6 +42,7 @@ def submit(driver, id):
 
     try:
         form_pcode = driver.find_element_by_xpath("//input[@placeholder = 'Pxxxxx']")
+        form_lang = Select(driver.find_element_by_xpath("//select[@class = 'form-control']"))
         form_sol = driver.find_element_by_xpath("//textarea")
         form_submit = driver.find_element_by_xpath("//button[@type = 'submit']")
     except:
@@ -49,8 +51,14 @@ def submit(driver, id):
     load_dotenv()
     FILE_PATH = os.getenv("PATH_TO_FOLDER")
 
+    ext = ""
+    if (lang == "C++"):
+        ext = "cpp"
+    elif (lang == "Python3"):
+        ext = "py"
+
     try:
-        with open(f"{FILE_PATH}/P{id}.cpp", 'r') as txt:
+        with open(f"{FILE_PATH}/P{id}.{ext}", 'r') as txt:
             data = txt.read()
     except:
         return "File not found"
@@ -58,6 +66,7 @@ def submit(driver, id):
     pyperclip.copy(data)
 
     form_pcode.send_keys(f"P{id}")
+    form_lang.select_by_value(lang)
     form_sol.send_keys(Keys.CONTROL + "v")
     form_submit.click()
 
