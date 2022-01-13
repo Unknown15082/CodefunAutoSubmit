@@ -15,8 +15,9 @@
 
 5. Edit the "tasks" list in AutoSubmit.py to strings corresponding to the tasks you want to submit
 6. If you don't have the libraries used, run "pip install -r path/to/requirements.txt" (subsitute with your own path)
-7. Run the AutoSubmit.py
+7. If you want to change the language, change line 5 in AutoSubmit.py to "Python3" or "C++"
+8. Run the AutoSubmit.py
 
 ## Warnings:
 
-Currently only support C++.
+Currently only support C++ and Python3.
