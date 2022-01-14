@@ -13,6 +13,8 @@
 
     PATH_TO_FOLDER = (absolute_path_to_the_folder_with_all_your_code)
 
+    LANG = (Language used, Python3 and C++ are currently supported)
+
 5. Edit the "tasks" list in AutoSubmit.py to strings corresponding to the tasks you want to submit
 6. If you don't have the libraries used, run "pip install -r path/to/requirements.txt" (subsitute with your own path)
 7. If you want to change the language, change line 5 in AutoSubmit.py to "Python3" or "C++"
