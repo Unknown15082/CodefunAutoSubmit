@@ -1,5 +1,5 @@
 from re import sub
-import Tools
+import src.Tools as Tools
 import time
 from dotenv import load_dotenv
 from os import getenv
