@@ -1,8 +1,9 @@
 import Tools as Tools
+from os import getenv
 import time
 
 tasks = ["001"]
-language = "Python3" # Or C++
+language = getenv("SUBMITLANGUAGE", "Python3")
 driver = Tools.setup()
 
 for i in tasks:
