@@ -1,13 +1,13 @@
 import json
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.keys import Keys
 from dotenv import load_dotenv
 from os import getenv, listdir
 import requests
-
+import pyperclip
 def get_extension(language):
     # C++, Python3, Pascal, NAsm
-
     if (language == "C++"):
         return "cpp"
     elif (language == "Python3"):
@@ -81,7 +81,10 @@ class Query:
 
         form_pcode.send_keys(id)
         form_lang.select_by_value(lang)
-        form_sol.send_keys(data)
+        old_clipboard = pyperclip.paste()
+        pyperclip.copy(data)
+        form_sol.send_keys(Keys.CONTROL, "v")
+        pyperclip.copy(old_clipboard)
         form_submit.click()
     
     def __del__(self):
@@ -130,9 +133,10 @@ def getaccepted():
     return accepted
 
 # ext is filter for file extension
-def getlooplist(ext):
+def getlooplist():
     load_dotenv()
     FILE_PATH = getenv("PATH_TO_FOLDER")
+    ext = get_extension(getenv("LANGUAGE"))
     aclist = getaccepted()
     # print(aclist)
     sublist = []

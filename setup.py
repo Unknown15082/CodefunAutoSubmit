@@ -29,7 +29,7 @@ def main():
         f.write(f"CF_USERNAME = {username}\n")
         f.write(f"CF_PASSWORD = {pwd}\n")
         f.write(f"PATH_TO_FOLDER = {filepath}\n")
-        f.write(f"LANG = {lang}\n")
+        f.write(f"LANGUAGE = {lang}\n")
         f.write(f"CHROME_PATH = {chromedriverpath}\n")
 
     print("Success")
