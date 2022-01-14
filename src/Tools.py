@@ -1,10 +1,8 @@
 import json
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from dotenv import load_dotenv
-import os
-import pyperclip
+from os import getenv, listdir
 import requests
 
 def get_extension(language):
@@ -30,12 +28,11 @@ def get_language(extension):
         return "Pascal"
     elif (extension == "s"):
         return "NAsm"
-    
-    return "Not a valid language"
+    raise Exception("Not a valid language")
 
 def setup():
     load_dotenv()
-    CHROME_PATH = os.getenv("CHROME_PATH", "chromedriver.exe")
+    CHROME_PATH = getenv("CHROME_PATH", "chromedriver.exe")
     options = webdriver.ChromeOptions()
     # Ignore Bluetooth error messages
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
@@ -48,8 +45,8 @@ def load(driver, url, wtime):
 
 def login(driver):
     load_dotenv()
-    CF_USERNAME = os.getenv("CF_USERNAME")
-    CF_PASSWORD = os.getenv("CF_PASSWORD")
+    CF_USERNAME = getenv("CF_USERNAME")
+    CF_PASSWORD = getenv("CF_PASSWORD")
 
     try:
         form_user = driver.find_element_by_xpath("//input[@placeholder = 'Username']")
@@ -82,11 +79,9 @@ class Query:
         except:
             raise Exception("File not found")
 
-        pyperclip.copy(data)
-
         form_pcode.send_keys(id)
         form_lang.select_by_value(lang)
-        form_sol.send_keys(Keys.CONTROL + "v")
+        form_sol.send_keys(data)
         form_submit.click()
     
     def __del__(self):
@@ -95,22 +90,19 @@ class Query:
 def submitfile(driver, filename):
 
     lang = get_language(filename[filename.rfind('.') + 1 : ])
-    if (lang == "Not a valid language"):
-        return "Not a file to submit"
-
     Query(driver, filename, lang, filename[:filename.rfind('.')].split("\\")[-1])
 
 # Providing only id
 def submit(driver, id, lang):
     load_dotenv()
-    FILE_PATH = os.getenv("PATH_TO_FOLDER")
+    FILE_PATH = getenv("PATH_TO_FOLDER")
     ext = ""
     ext = get_extension(lang)
     Query(driver, f"{FILE_PATH}\P{id}.{ext}", lang, f"P{id}")
 
 def getaccepted():
     load_dotenv()
-    CF_USERNAME = os.getenv("CF_USERNAME")
+    CF_USERNAME = getenv("CF_USERNAME")
     # json scheme:
     # {
     # "data": [
@@ -140,11 +132,11 @@ def getaccepted():
 # ext is filter for file extension
 def getlooplist(ext):
     load_dotenv()
-    FILE_PATH = os.getenv("PATH_TO_FOLDER")
+    FILE_PATH = getenv("PATH_TO_FOLDER")
     aclist = getaccepted()
     # print(aclist)
     sublist = []
-    for filename in os.listdir(FILE_PATH):
+    for filename in listdir(FILE_PATH):
         if (filename.endswith(ext) and filename.split(".")[0] not in aclist and not filename.startswith("pass")):
             print(filename.split(".")[0])
             sublist.append(filename)

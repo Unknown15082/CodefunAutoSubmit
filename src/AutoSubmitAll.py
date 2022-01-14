@@ -3,6 +3,7 @@ import time
 from dotenv import load_dotenv
 from os import getenv
 from requests.exceptions import ConnectionError
+
 load_dotenv()
 FILE_PATH = getenv("PATH_TO_FOLDER")
 lang = getenv("SUBMITLANGUAGE", "Python3")
@@ -28,10 +29,7 @@ if confirm == "y" or confirm == "yes":
     driver = Tools.setup()
     for file in sublist:
         try:
-            info = Tools.submitfile(driver, f"{FILE_PATH}\{file}")
-
-            if info == 'Not a file to submit':
-                continue
+            Tools.submitfile(driver, f"{FILE_PATH}\{file}")
 
             print(f"{file} submitted, waiting for 90 secs")
             time.sleep(90)
