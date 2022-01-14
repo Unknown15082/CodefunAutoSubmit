@@ -6,13 +6,11 @@ from requests.exceptions import ConnectionError
 
 load_dotenv()
 FILE_PATH = getenv("PATH_TO_FOLDER")
-lang = getenv("SUBMITLANGUAGE", "Python3")
 sublist = []
 
 print(f"Preparing for submission of all files in folder {FILE_PATH}")
 try:
-    ext = Tools.get_extension(lang)
-    sublist = Tools.getlooplist(f".{ext}")
+    sublist = Tools.getlooplist()
 except ConnectionError:
     print("Connection error")
     exit(1)
