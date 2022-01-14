@@ -14,3 +14,4 @@ for i in tasks:
         print ("Sleep period interrupted, force submitting next file")
     except:
         print (f"Error while submitting {i}")
+driver.quit()

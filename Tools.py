@@ -14,7 +14,6 @@ def setup():
     # Ignore Bluetooth error messages
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     driver = webdriver.Chrome(executable_path = CHROME_PATH, options = options)
-    # driver.close()
     return driver
 
 def load(driver, url, wtime):
@@ -65,8 +64,6 @@ class query:
         form_submit.click()
     def __del__(self):
         pass
-        # time.sleep(2)
-        # self.drv.close()
 
 def submitfile(driver, filename):
     if (filename.endswith(".py")):

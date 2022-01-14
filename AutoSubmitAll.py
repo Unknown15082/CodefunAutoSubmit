@@ -33,3 +33,4 @@ if confirm == "y":
             print (f"Error while submitting {file}")
 else:
     print("Aborted")
+driver.quit()
