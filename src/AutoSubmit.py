@@ -3,7 +3,7 @@ from os import getenv
 import time
 
 tasks = ["001"]
-language = getenv("SUBMITLANGUAGE", "Python3")
+language = getenv("LANGUAGE", "Python3")
 driver = Tools.setup()
 
 for i in tasks:
