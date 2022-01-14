@@ -119,7 +119,7 @@ def getlooplist(ext):
     # print(aclist)
     sublist = []
     for filename in os.listdir(FILE_PATH):
-        if (filename.endswith(ext) and filename.split(".")[0] not in aclist):
+        if (filename.endswith(ext) and filename.split(".")[0] not in aclist and not filename.startswith("pass")):
             print (filename.split(".")[0])
             sublist.append(filename)
     return sublist
