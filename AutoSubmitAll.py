@@ -18,14 +18,19 @@ except ConnectionError:
     exit(1)
 
 print(f"Submitting {sublist}")
-confirm = input("Proceed? (y/n)").lower()
+confirm = input("Proceed? (y/n) ").lower()
 
-if confirm == "y":
+if confirm == "y" or confirm == "yes":
     print ("Submitting...")
     for file in sublist:
         try:
-            Tools.submitfile(driver, f"{FILE_PATH}\{file}")
-            print (f"{file} submitted, waiting for 90 secs")
+            info = Tools.submitfile(driver, f"{FILE_PATH}\{file}")
+            print(info)
+
+            if info == 'Not a file to submit':
+                continue
+
+            print(f"{file} submitted, waiting for 90 secs")
             time.sleep(90)
         except KeyboardInterrupt:
             print ("Sleep period interrupted, force submitting next file")
@@ -33,4 +38,5 @@ if confirm == "y":
             print (f"Error while submitting {file}")
 else:
     print("Aborted")
+
 driver.quit()

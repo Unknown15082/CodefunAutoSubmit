@@ -6,7 +6,33 @@ from dotenv import load_dotenv
 import os
 import pyperclip
 import requests
-import time
+
+def get_extension(language):
+    # C++, Python3, Pascal, NAsm
+
+    if (language == "C++"):
+        return "cpp"
+    elif (language == "Python3"):
+        return "py"
+    elif (language == "Pascal"):
+        return "pas"
+    elif (language == "NAsm"):
+        return "s"
+    
+    raise Exception("Language not found")
+
+def get_language(extension):
+    if (extension == "cpp"):
+        return "C++"
+    elif (extension == "py"):
+        return "Python3"
+    elif (extension == "pas"):
+        return "Pascal"
+    elif (extension == "s"):
+        return "NAsm"
+    
+    return "Not a valid language"
+
 def setup():
     load_dotenv()
     CHROME_PATH = os.getenv("CHROME_PATH", "chromedriver.exe")
@@ -37,9 +63,9 @@ def login(driver):
     form_login.click()
 
     return "Success"
-class query:
+
+class Query:
     def __init__(self, driver, abspath, lang, id):
-        self.drv = driver
         load(driver, "https://codefun.vn/submit", 5)
         login(driver)
 
@@ -62,25 +88,25 @@ class query:
         form_lang.select_by_value(lang)
         form_sol.send_keys(Keys.CONTROL + "v")
         form_submit.click()
+    
     def __del__(self):
         pass
 
 def submitfile(driver, filename):
-    if (filename.endswith(".py")):
-        query(driver, filename, "Python3", filename[:-3].split("\\")[-1])
-    elif (filename.endswith(".cpp")):
-        query(driver, filename, "C++", filename[:-4])
+
+    lang = get_language(filename[filename.rfind('.') + 1 : ])
+    if (lang == "Not a valid language"):
+        return "Not a file to submit"
+
+    Query(driver, filename, lang, filename[:filename.rfind('.')].split("\\")[-1])
 
 # Providing only id
 def submit(driver, id, lang):
     load_dotenv()
     FILE_PATH = os.getenv("PATH_TO_FOLDER")
     ext = ""
-    if (lang == "C++"):
-        ext = "cpp"
-    elif (lang == "Python3"):
-        ext = "py"
-    query(driver, f"{FILE_PATH}\P{id}.{ext}", lang, f"P{id}")
+    ext = get_extension(lang)
+    Query(driver, f"{FILE_PATH}\P{id}.{ext}", lang, f"P{id}")
 
 def getaccepted():
     load_dotenv()
@@ -107,7 +133,7 @@ def getaccepted():
     json_data = json.loads(response.text)["data"]
     
     for submission in json_data:
-        if (submission["score"] == submission["maxScore"]):
+        if (abs(submission["score"] - submission["maxScore"]) < 0.000000001):
             accepted.append(submission["problem"]["code"])
     return accepted
 
@@ -120,6 +146,6 @@ def getlooplist(ext):
     sublist = []
     for filename in os.listdir(FILE_PATH):
         if (filename.endswith(ext) and filename.split(".")[0] not in aclist and not filename.startswith("pass")):
-            print (filename.split(".")[0])
+            print(filename.split(".")[0])
             sublist.append(filename)
     return sublist
