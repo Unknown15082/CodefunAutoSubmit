@@ -99,7 +99,6 @@ def submitfile(driver, filename):
 def submit(driver, id, lang):
     load_dotenv()
     FILE_PATH = getenv("PATH_TO_FOLDER")
-    ext = ""
     ext = get_extension(lang)
     Query(driver, f"{FILE_PATH}\P{id}.{ext}", lang, f"P{id}")
 

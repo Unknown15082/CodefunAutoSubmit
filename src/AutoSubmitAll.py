@@ -32,7 +32,12 @@ if confirm == "y" or confirm == "yes":
             print(f"{file} submitted, waiting for 90 secs")
             time.sleep(90)
         except KeyboardInterrupt:
-            print("Sleep period interrupted, force submitting next file")
+            halt = input("Sleep period interrupted, halt program? (y/n) ").lower()
+            if halt == "y" or halt == "yes":
+                print("Aborted")
+                exit(0)
+            else:
+                print("Force submitting next file")
         except:
             print(f"Error while submitting {file}")
     driver.quit()
