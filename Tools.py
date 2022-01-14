@@ -7,7 +7,7 @@ import pyperclip
 
 def setup():
     options = webdriver.ChromeOptions()
-    driver = webdriver.Chrome(executable_path = "C:/ChromeDriver/ChromeDriver_V97/chromedriver.exe", options = options)
+    driver = webdriver.Chrome(executable_path = "chromedriver.exe", options = options)
     return driver
 
 def load(driver, url, wtime):
@@ -31,12 +31,7 @@ def login(driver):
     form_login.click()
 
     return "Success"
-
-def submit(driver, id, lang):
-    '''
-    Currently default to C++.
-    '''
-
+def query(driver, abspath, lang, id):
     load(driver, "https://codefun.vn/submit", 5)
     login(driver)
 
@@ -47,27 +42,33 @@ def submit(driver, id, lang):
         form_submit = driver.find_element_by_xpath("//button[@type = 'submit']")
     except:
         return "Error"
-
-    load_dotenv()
-    FILE_PATH = os.getenv("PATH_TO_FOLDER")
-
-    ext = ""
-    if (lang == "C++"):
-        ext = "cpp"
-    elif (lang == "Python3"):
-        ext = "py"
-
     try:
-        with open(f"{FILE_PATH}/P{id}.{ext}", 'r') as txt:
+        with open(abspath, 'r') as txt:
             data = txt.read()
     except:
         return "File not found"
 
     pyperclip.copy(data)
 
-    form_pcode.send_keys(f"P{id}")
+    form_pcode.send_keys(id)
     form_lang.select_by_value(lang)
     form_sol.send_keys(Keys.CONTROL + "v")
     form_submit.click()
-
     return "Success"
+
+def submitfile(driver, filename):
+    if (filename.endswith(".py")):
+        return query(driver, filename, "Python3", filename[:-3])
+    elif (filename.endswith(".cpp")):
+        return query(driver, filename, "C++", filename[:-4])
+
+# Providing only id
+def submit(driver, id, lang):
+    load_dotenv()
+    FILE_PATH = os.getenv("PATH_TO_FOLDER")
+    ext = ""
+    if (lang == "C++"):
+        ext = "cpp"
+    elif (lang == "Python3"):
+        ext = "py"
+    return query(driver, f"{FILE_PATH}/P{id}.{ext}", lang, f"P{id}")
