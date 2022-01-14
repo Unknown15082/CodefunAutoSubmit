@@ -1,5 +1,4 @@
-from re import sub
-import Tools as Tools
+import Tools
 import time
 from dotenv import load_dotenv
 from os import getenv
@@ -14,7 +13,7 @@ try:
     ext = Tools.get_extension(lang)
     sublist = Tools.getlooplist(f".{ext}")
 except ConnectionError:
-    print ("Connection error")
+    print("Connection error")
     exit(1)
 
 if (len(sublist) == 0):
@@ -25,12 +24,11 @@ print(f"Submitting {sublist}")
 confirm = input("Proceed? (y/n) ").lower()
 
 if confirm == "y" or confirm == "yes":
-    print ("Submitting...")
+    print("Submitting...")
     driver = Tools.setup()
     for file in sublist:
         try:
             info = Tools.submitfile(driver, f"{FILE_PATH}\{file}")
-            print(info)
 
             if info == 'Not a file to submit':
                 continue
@@ -38,9 +36,9 @@ if confirm == "y" or confirm == "yes":
             print(f"{file} submitted, waiting for 90 secs")
             time.sleep(90)
         except KeyboardInterrupt:
-            print ("Sleep period interrupted, force submitting next file")
+            print("Sleep period interrupted, force submitting next file")
         except:
-            print (f"Error while submitting {file}")
+            print(f"Error while submitting {file}")
     driver.quit()
 else:
     print("Aborted")

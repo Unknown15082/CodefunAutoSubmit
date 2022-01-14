@@ -1,4 +1,4 @@
-import Tools as Tools
+import Tools
 from os import getenv
 import time
 
@@ -12,7 +12,7 @@ for i in tasks:
         print(f"{i} submitted, waiting for 90 secs")
         time.sleep(90)
     except KeyboardInterrupt:
-        print ("Sleep period interrupted, force submitting next file")
+        print("Sleep period interrupted, force submitting next file")
     except:
-        print (f"Error while submitting {i}")
+        print(f"Error while submitting {i}")
 driver.quit()
