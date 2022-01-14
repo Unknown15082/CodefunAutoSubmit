@@ -1,13 +1,17 @@
+import json
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from dotenv import load_dotenv
 import os
 import pyperclip
+import requests
 
 def setup():
+    load_dotenv()
+    CHROME_PATH = os.getenv("CHROME_PATH", "chromedriver.exe")
     options = webdriver.ChromeOptions()
-    driver = webdriver.Chrome(executable_path = "chromedriver.exe", options = options)
+    driver = webdriver.Chrome(executable_path = CHROME_PATH, options = options)
     return driver
 
 def load(driver, url, wtime):
@@ -31,6 +35,7 @@ def login(driver):
     form_login.click()
 
     return "Success"
+
 def query(driver, abspath, lang, id):
     load(driver, "https://codefun.vn/submit", 5)
     login(driver)
@@ -72,3 +77,48 @@ def submit(driver, id, lang):
     elif (lang == "Python3"):
         ext = "py"
     return query(driver, f"{FILE_PATH}/P{id}.{ext}", lang, f"P{id}")
+
+def getaccepted():
+    load_dotenv()
+    CF_USERNAME = os.getenv("CF_USERNAME")
+    # json scheme:
+    # {
+    # "data": [
+    #         {
+    #         "problem": {
+    #             "id": 274,
+    #             "code": "P10001",
+    #             "name": "Trò chơi của Shi-ura"
+    #         },
+    #         "submissionId": 2375281,
+    #         "score": 100,
+    #         "maxScore": 100,
+    #         "submitTime": 1633103943
+    #         }
+    #     ]
+    # }
+    accepted = []
+    try:
+        response = requests.get(f"https://codefun.vn/api/users/{CF_USERNAME}/stats?")
+        json_data = json.loads(response.text)["data"]
+    except:
+        return "Error"
+    
+    for submission in json_data:
+        if (submission["score"] == submission["maxScore"]):
+            accepted.append(submission["problem"]["code"])
+    return accepted
+
+# ext is filter for file extension
+def getlooplist(ext):
+    load_dotenv()
+    FILE_PATH = os.getenv("PATH_TO_FOLDER")
+    aclist = getaccepted()
+    print(aclist)
+
+    sublist = []
+    for filename in os.listdir(FILE_PATH):
+        if (filename.endswith(ext) and filename.split(".")[0] not in aclist):
+            sublist.append(filename)
+            # submitfile(driver, f"{FILE_PATH}/{filename}")
+    return filename
