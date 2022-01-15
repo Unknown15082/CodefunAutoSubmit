@@ -32,7 +32,8 @@ if confirm == "y" or confirm == "yes":
             print(f"{file} submitted, waiting for 90 secs")
             time.sleep(90)
         except KeyboardInterrupt:
-            halt = input("Sleep period interrupted, halt program? (y/n) ").lower()
+            halt = input(
+                "Sleep period interrupted, halt program? (y/n) ").lower()
             if halt == "y" or halt == "yes":
                 print("Aborted")
                 exit(0)

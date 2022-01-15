@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from os import getenv, listdir
 import requests
 import pyperclip
+
+
 def get_extension(language):
     # C++, Python3, Pascal, NAsm
     if (language == "C++"):
@@ -16,8 +18,9 @@ def get_extension(language):
         return "pas"
     elif (language == "NAsm"):
         return "s"
-    
+
     raise Exception("Language not found")
+
 
 def get_language(extension):
     if (extension == "cpp"):
@@ -30,18 +33,21 @@ def get_language(extension):
         return "NAsm"
     raise Exception("Not a valid language")
 
+
 def setup():
     load_dotenv()
     CHROME_PATH = getenv("CHROME_PATH", "chromedriver.exe")
     options = webdriver.ChromeOptions()
     # Ignore Bluetooth error messages
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    driver = webdriver.Chrome(executable_path = CHROME_PATH, options = options)
+    driver = webdriver.Chrome(executable_path=CHROME_PATH, options=options)
     return driver
+
 
 def load(driver, url, wtime):
     driver.get(url)
     driver.implicitly_wait(wtime)
+
 
 def login(driver):
     load_dotenv()
@@ -49,8 +55,10 @@ def login(driver):
     CF_PASSWORD = getenv("CF_PASSWORD")
 
     try:
-        form_user = driver.find_element_by_xpath("//input[@placeholder = 'Username']")
-        form_pass = driver.find_element_by_xpath("//input[@placeholder = 'Password']")
+        form_user = driver.find_element_by_xpath(
+            "//input[@placeholder = 'Username']")
+        form_pass = driver.find_element_by_xpath(
+            "//input[@placeholder = 'Password']")
         form_login = driver.find_element_by_xpath("//button[@type = 'submit']")
     except:
         return "Error"
@@ -61,16 +69,20 @@ def login(driver):
 
     return "Success"
 
+
 class Query:
     def __init__(self, driver, abspath, lang, id):
         load(driver, "https://codefun.vn/submit", 5)
         login(driver)
 
         try:
-            form_pcode = driver.find_element_by_xpath("//input[@placeholder = 'Pxxxxx']")
-            form_lang = Select(driver.find_element_by_xpath("//select[@class = 'form-control']"))
+            form_pcode = driver.find_element_by_xpath(
+                "//input[@placeholder = 'Pxxxxx']")
+            form_lang = Select(driver.find_element_by_xpath(
+                "//select[@class = 'form-control']"))
             form_sol = driver.find_element_by_xpath("//textarea")
-            form_submit = driver.find_element_by_xpath("//button[@type = 'submit']")
+            form_submit = driver.find_element_by_xpath(
+                "//button[@type = 'submit']")
         except:
             raise Exception("Selenium Error")
         try:
@@ -86,21 +98,26 @@ class Query:
         form_sol.send_keys(Keys.CONTROL, "v")
         pyperclip.copy(old_clipboard)
         form_submit.click()
-    
+
     def __del__(self):
         pass
 
+
 def submitfile(driver, filename):
 
-    lang = get_language(filename[filename.rfind('.') + 1 : ])
-    Query(driver, filename, lang, filename[:filename.rfind('.')].split("\\")[-1])
+    lang = get_language(filename[filename.rfind('.') + 1:])
+    Query(driver, filename, lang,
+          filename[:filename.rfind('.')].split("\\")[-1])
 
 # Providing only id
+
+
 def submit(driver, id, lang):
     load_dotenv()
     FILE_PATH = getenv("PATH_TO_FOLDER")
     ext = get_extension(lang)
     Query(driver, f"{FILE_PATH}\P{id}.{ext}", lang, f"P{id}")
+
 
 def getaccepted():
     load_dotenv()
@@ -123,15 +140,18 @@ def getaccepted():
     # }
     accepted = []
     # try:
-    response = requests.get(f"https://codefun.vn/api/users/{CF_USERNAME}/stats?")
+    response = requests.get(
+        f"https://codefun.vn/api/users/{CF_USERNAME}/stats?")
     json_data = json.loads(response.text)["data"]
-    
+
     for submission in json_data:
         if (abs(submission["score"] - submission["maxScore"]) < 0.000000001):
             accepted.append(submission["problem"]["code"])
     return accepted
 
 # ext is filter for file extension
+
+
 def getlooplist():
     load_dotenv()
     FILE_PATH = getenv("PATH_TO_FOLDER")
