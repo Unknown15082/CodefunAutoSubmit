@@ -22,7 +22,7 @@ def main():
     
     chromedriverpath = input("What is the path to your chromedriver.exe file? (Type NA if you don't have chromedriver.exe)\n")
     while chromedriverpath == "NA":
-        print ("Redirecting to https://chromedriver.chromium.org/downloads")
+        print("Redirecting to https://chromedriver.chromium.org/downloads")
         webbrowser.open_new_tab("https://chromedriver.chromium.org/downloads")
         chromedriverpath = input("What is the path to your chromedriver.exe file?\n")
     with open(".env", "w") as f:

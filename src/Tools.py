@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from os import getenv, listdir
 import requests
 import pyperclip
+
 def get_extension(language):
     # C++, Python3, Pascal, NAsm
     if (language == "C++"):
@@ -130,6 +131,43 @@ def getaccepted():
         if (abs(submission["score"] - submission["maxScore"]) < 0.000000001):
             accepted.append(submission["problem"]["code"])
     return accepted
+
+def retrieveSubmission(driver, subID, code, lang):
+    load(driver, f"https://codefun.vn/submissions/{subID}", 3)
+    login(driver)
+
+    load_dotenv()
+    PATH = getenv("PATH_TO_FOLDER")
+
+    try:
+        rawcode = driver.find_element_by_xpath("//code").text
+        language = driver.find_element_by_xpath("//*[@id='root']/div/div[1]/div[1]/div/div/div[1]/div/div[2]/ul/li[3]/b").text
+    except:
+        return "No code found"
+
+    print(language)
+
+    if (language != lang):
+        return
+
+    with open(f"{PATH}/{code}.{get_extension(lang)}", "w+") as f:
+        f.write(rawcode)
+
+def retrieveAllAC():
+    load_dotenv()
+    CF_USERNAME = getenv("CF_USERNAME")
+
+    response = requests.get(f"https://codefun.vn/api/users/{CF_USERNAME}/stats?")
+    data = response.json()["data"]
+
+    sublist = []
+
+    for problem in data:
+        if (abs(problem["score"] - problem["maxScore"]) < 0.000000001):
+            sublist.append([problem["submissionId"], problem["problem"]["code"]])
+
+    return sublist
+
 
 # ext is filter for file extension
 def getlooplist():
