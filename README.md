@@ -20,6 +20,8 @@
 ## Notes:
 Currently only support C++, Python3, Pascal and NAsm.
 
+While this tool currently only supports Windows, any pull requests about support for Ubuntu and other OSes are welcomed
+
 Make sure that the information provided in the setup.py file is correct (otherwise it's undefined behavior)
 
 Please use this tool in accordance with Codefun's rules. The developers and contributors strongly discourage the use of this tool for plagiarism.
